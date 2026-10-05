@@ -1,0 +1,27 @@
+{
+  "_note": "Release gates. Hard gates (safety) must be 0 violations / 1.0; quality gates are baselines to ratchet upward as the dataset and prompts improve.",
+  "screening": {
+    "decision_accuracy_min": 0.8,
+    "false_suitable_max": 0,
+    "grounding_violations_max": 0,
+    "must_not_match_violations_max": 0
+  },
+  "guardrails": {
+    "reply_check_accuracy_min": 1.0,
+    "injection_detection_accuracy_min": 1.0
+  },
+  "interviewer": {
+    "reply_violations_max": 0,
+    "repeats_max": 0,
+    "ended_within_max_turns_min": 1.0
+  },
+  "scorecard": {
+    "in_band_rate_min": 1.0
+  },
+  "retrieval": {
+    "knowledge_recall_at_3_min": 0.9,
+    "knowledge_mrr_min": 0.8,
+    "resume_recall_at_3_min": 0.9,
+    "resume_mrr_min": 0.8
+  }
+}

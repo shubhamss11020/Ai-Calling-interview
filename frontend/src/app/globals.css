@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/* Design tokens. One neutral scale + one brand accent; colour is reserved for status meaning. */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --line: #e4e7ec;
+  --line-strong: #d0d5dd;
+  --fg: #101828;
+  --fg-muted: #475467;
+  --fg-subtle: #667085;
+  --brand: #4338ca;
+  --brand-hover: #3730a3;
+  --brand-soft: #eef2ff;
+  --brand-fg: #ffffff;
+
+  --ok: #067647;       --ok-soft: #ecfdf3;       --ok-line: #abefc6;
+  --warn: #b54708;     --warn-soft: #fffaeb;     --warn-line: #fedf89;
+  --bad: #b42318;      --bad-soft: #fef3f2;      --bad-line: #fecdca;
+  --info: #175cd3;     --info-soft: #eff8ff;     --info-line: #b2ddff;
+  --violet: #6941c6;   --violet-soft: #f4f3ff;   --violet-line: #d9d6fe;
+
+  --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.05);
+  --shadow-md: 0 4px 12px -2px rgb(16 24 40 / 0.08), 0 2px 4px -2px rgb(16 24 40 / 0.04);
+  --shadow-lg: 0 20px 40px -12px rgb(16 24 40 / 0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c111d;
+    --surface: #131a2a;
+    --surface-2: #182033;
+    --line: #243049;
+    --line-strong: #344260;
+    --fg: #f2f4f7;
+    --fg-muted: #b4bccb;
+    --fg-subtle: #8792a8;
+    --brand: #818cf8;
+    --brand-hover: #a5b4fc;
+    --brand-soft: #1e2347;
+    --brand-fg: #0c111d;
+
+    --ok: #47cd89;     --ok-soft: #0b2a1f;     --ok-line: #134e36;
+    --warn: #fdb022;   --warn-soft: #2c2008;   --warn-line: #5c4210;
+    --bad: #f97066;    --bad-soft: #31130f;    --bad-line: #61221b;
+    --info: #53b1fd;   --info-soft: #0b2236;   --info-line: #174469;
+    --violet: #a48afb; --violet-soft: #1d1738; --violet-line: #3b2f70;
+
+    --shadow-sm: none;
+    --shadow-md: 0 4px 16px -4px rgb(0 0 0 / 0.5);
+    --shadow-lg: 0 24px 48px -12px rgb(0 0 0 / 0.7);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-subtle: var(--fg-subtle);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-fg: var(--brand-fg);
+  --color-ok: var(--ok);       --color-ok-soft: var(--ok-soft);       --color-ok-line: var(--ok-line);
+  --color-warn: var(--warn);   --color-warn-soft: var(--warn-soft);   --color-warn-line: var(--warn-line);
+  --color-bad: var(--bad);     --color-bad-soft: var(--bad-soft);     --color-bad-line: var(--bad-line);
+  --color-info: var(--info);   --color-info-soft: var(--info-soft);   --color-info-line: var(--info-line);
+  --color-violet: var(--violet); --color-violet-soft: var(--violet-soft); --color-violet-line: var(--violet-line);
+  --shadow-card: var(--shadow-sm);
+  --shadow-pop: var(--shadow-md);
+  --shadow-drawer: var(--shadow-lg);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@keyframes slide-in-right { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rise { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+.anim-drawer { animation: slide-in-right 0.2s ease-out; }
+.anim-fade { animation: fade-in 0.15s ease-out; }
+.anim-rise { animation: rise 0.2s ease-out; }
+
+@keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 50%, var(--surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-drawer, .anim-fade, .anim-rise, .skeleton { animation: none; }
+}

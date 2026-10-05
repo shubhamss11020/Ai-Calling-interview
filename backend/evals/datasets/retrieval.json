@@ -1,0 +1,44 @@
+{
+  "_note": "Retrieval quality for the two RAG corpora. knowledge_items are loaded as JobKnowledge; resume_text is chunked and indexed as a candidate resume. Each query lists the item id (knowledge) or a substring (resume chunk) that must come back. Distractors share a domain on purpose (two DB items, two cache items). SEED DATA: extend with real roles and real answers.",
+  "job": {
+    "title": "Backend Engineer",
+    "description": "Build and operate Python APIs backed by PostgreSQL and Redis, deployed with Docker on Kubernetes."
+  },
+  "knowledge_items": [
+    {"id": "pg-index", "kind": "question", "topic": "PostgreSQL", "content": "Ask how they decide which columns to index in PostgreSQL, when a composite index beats single-column indexes, and how they verify a query uses it with EXPLAIN ANALYZE."},
+    {"id": "pg-pool", "kind": "question", "topic": "PostgreSQL", "content": "Ask how they manage database connections under load: connection pooling, pgbouncer, pool sizing, and what happens when the pool is exhausted."},
+    {"id": "redis-invalidate", "kind": "question", "topic": "Redis", "content": "Ask how they keep a Redis cache consistent with the database: write-through versus cache-aside, TTLs, and invalidating keys when data changes."},
+    {"id": "redis-evict", "kind": "rubric", "topic": "Redis", "content": "A strong answer on Redis memory management mentions maxmemory, eviction policies such as allkeys-lru, key expiry, and monitoring hit rate."},
+    {"id": "docker-image", "kind": "question", "topic": "Docker", "content": "Ask how they keep Docker images small and builds fast: multi-stage builds, layer caching, slim base images, and running as a non-root user."},
+    {"id": "k8s-rollout", "kind": "question", "topic": "Kubernetes", "content": "Ask how they roll out a new version on Kubernetes without downtime: rolling updates, readiness probes, resource limits, and rollback."},
+    {"id": "async-fastapi", "kind": "question", "topic": "FastAPI", "content": "Ask when to use async def versus def in FastAPI, what blocks the event loop, and how they run CPU-heavy or blocking work."},
+    {"id": "celery-retry", "kind": "rubric", "topic": "Celery", "content": "A strong answer on background jobs covers idempotent tasks, retries with exponential backoff, dead-letter handling, and visibility timeouts."},
+    {"id": "sys-design-rate", "kind": "question", "topic": "System design", "content": "Ask them to design a rate limiter for a public API: token bucket versus sliding window, where state lives, and behaviour across multiple servers."},
+    {"id": "auth-jwt", "kind": "question", "topic": "Security", "content": "Ask how they secure an API with JWTs: token expiry, refresh tokens, key rotation, and where tokens must never be stored."},
+    {"id": "testing", "kind": "rubric", "topic": "Testing", "content": "A strong answer on testing separates fast unit tests from integration tests against a real database, uses fixtures, and tests failure paths, not only the happy path."},
+    {"id": "observability", "kind": "question", "topic": "Observability", "content": "Ask how they debug a production incident: structured logs, request IDs, metrics, tracing, and how they find the root cause quickly."}
+  ],
+  "knowledge_queries": [
+    {"q": "We added a multi-column index on user id and created at, and checked the query plan to make sure it was used.", "expect": "pg-index"},
+    {"q": "Our app kept running out of database connections during traffic spikes, so we put a pooler in front.", "expect": "pg-pool"},
+    {"q": "When a record changes we delete the cached key and let the next read repopulate it with a short expiry.", "expect": "redis-invalidate"},
+    {"q": "The cache was growing without limit so we set a memory cap and a least-recently-used eviction policy.", "expect": "redis-evict"},
+    {"q": "I use a multi-stage build and a slim base image so the final container is tiny.", "expect": "docker-image"},
+    {"q": "We do rolling deployments with readiness probes so pods only get traffic when healthy, and we can roll back fast.", "expect": "k8s-rollout"},
+    {"q": "A synchronous library call was freezing all requests, so I moved it to a thread pool instead of an async handler.", "expect": "async-fastapi"},
+    {"q": "Our background tasks retry with backoff and are safe to run twice, and failures land in a dead letter queue.", "expect": "celery-retry"},
+    {"q": "I would use a token bucket stored in a shared store so every server enforces the same request limit per client.", "expect": "sys-design-rate"},
+    {"q": "Access tokens expire in fifteen minutes, refresh tokens rotate, and we never keep tokens in local storage.", "expect": "auth-jwt"},
+    {"q": "We keep quick isolated unit tests and also run integration tests against a real database including the error paths.", "expect": "testing"},
+    {"q": "Every request has an id in the logs and we use traces and metrics to find which service slowed down.", "expect": "observability"}
+  ],
+  "resume_text": "Priya Nair\nSenior Backend Engineer\n\nSUMMARY\nBackend engineer with 6 years of experience building high-traffic APIs in Python. Comfortable owning services from design to on-call.\n\nEXPERIENCE\nPaySphere (2021 to present): Led the migration of a monolith to FastAPI microservices handling 3,000 requests per second. Reduced p95 latency from 800ms to 120ms by adding Redis caching and composite PostgreSQL indexes.\n\nLogiTrack (2018 to 2021): Built the real-time shipment tracking backend. Introduced Celery workers with retry and backoff for carrier webhooks, processing two million events a day.\n\nINFRASTRUCTURE\nPackaged services with Docker multi-stage builds and deployed to Kubernetes with rolling updates and readiness probes. Built CI pipelines in GitHub Actions.\n\nEDUCATION\nB.Tech in Computer Science, NIT Calicut, 2018.\n\nCERTIFICATIONS\nAWS Certified Solutions Architect Associate. Completed a course on distributed systems and consensus.\n\nVOLUNTEERING\nMentors students at a local coding club every weekend and organises hackathons.",
+  "resume_queries": [
+    {"q": "Backend Engineer. Skills: Redis caching, PostgreSQL indexing, latency optimisation", "expect_contains": "Redis caching"},
+    {"q": "Background job processing with retries", "expect_contains": "Celery"},
+    {"q": "Container builds and Kubernetes deployment experience", "expect_contains": "Kubernetes"},
+    {"q": "Formal education and degree", "expect_contains": "NIT Calicut"},
+    {"q": "Cloud certifications", "expect_contains": "AWS Certified"},
+    {"q": "Community involvement and mentoring", "expect_contains": "Mentors students"}
+  ]
+}
